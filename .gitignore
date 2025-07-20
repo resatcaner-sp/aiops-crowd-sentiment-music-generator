@@ -1,0 +1,55 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+
+# Unit test / coverage reports
+.coverage
+.coverage.*
+coverage.xml
+report.xml
+ruff.out
+.pytest_cache/
+ruff_report.json
+mypy_report.json
+
+# mkdocs documentation
+/site
+
+# ruff
+.ruff_cache/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# PyCharm
+.idea/
+
+# kiro 
+.kiro/
+
+.env
+
+# Vscode
+.vscode/
+
+# Logs
+*.log
+*.jsonl
+logs/
+
+# Vscode
+.vscode/
+.python-version
+
+# Excel Outputs
+*.xlsx
+*.xls
+
+# Venv
+.venv/
