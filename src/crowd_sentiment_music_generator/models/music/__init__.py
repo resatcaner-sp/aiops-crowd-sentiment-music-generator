@@ -1,0 +1,1 @@
+"""Music models for crowd sentiment music generator."""

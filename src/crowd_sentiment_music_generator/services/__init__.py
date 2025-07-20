@@ -1,0 +1,1 @@
+"""Services package for crowd sentiment music generator."""

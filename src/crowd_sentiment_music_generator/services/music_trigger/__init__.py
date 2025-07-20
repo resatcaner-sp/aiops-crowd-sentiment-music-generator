@@ -1,0 +1,1 @@
+"""Music trigger services for crowd sentiment music generator."""

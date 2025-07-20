@@ -1,0 +1,1 @@
+"""Highlight generator services for crowd sentiment music generator."""

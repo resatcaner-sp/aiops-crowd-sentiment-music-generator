@@ -1,0 +1,1 @@
+"""API package for crowd sentiment music generator."""

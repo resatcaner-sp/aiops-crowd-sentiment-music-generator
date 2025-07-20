@@ -1,0 +1,1 @@
+"""Music trigger unit tests package."""

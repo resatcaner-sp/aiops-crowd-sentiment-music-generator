@@ -1,0 +1,1 @@
+"""Models package for crowd sentiment music generator."""
