@@ -30,8 +30,7 @@ dmypy.json
 # PyCharm
 .idea/
 
-# kiro 
-.kiro/
+
 
 .env
 

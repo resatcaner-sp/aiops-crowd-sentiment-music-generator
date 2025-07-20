@@ -1,6 +1,6 @@
 [project]
 name = "aiops-crowd-sentiment-music-generator"
-version = "Transforming Fan Emotions into Musical Experiences"
+version = "0.1.0"
 description = "Crowd Noise Sentiment-to-Music Generator"
 authors = [
     { name = "Caner Bas ", email = "caner.bas@statsperform.com"}
