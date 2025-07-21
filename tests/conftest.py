@@ -1,76 +1,57 @@
-"""Common test fixtures for the crowd sentiment music generator."""
+"""Pytest configuration file."""
 
+import os
 import pytest
 from fastapi.testclient import TestClient
 
 from crowd_sentiment_music_generator.api.app import create_app
-from crowd_sentiment_music_generator.models.data.match_event import MatchEvent
-from crowd_sentiment_music_generator.models.data.crowd_emotion import CrowdEmotion
-from crowd_sentiment_music_generator.models.music.musical_parameters import MusicalParameters
 
 
 @pytest.fixture
-def client() -> TestClient:
-    """Create a test client for the FastAPI application.
-    
-    Returns:
-        TestClient: The test client
-    """
+def client():
+    """Create a test client for the FastAPI application."""
     app = create_app()
     return TestClient(app)
 
 
-@pytest.fixture
-def sample_match_event() -> MatchEvent:
-    """Create a sample match event.
+def pytest_configure(config):
+    """Configure pytest."""
+    # Register custom markers
+    config.addinivalue_line("markers", "integration: mark test as an integration test")
+    config.addinivalue_line("markers", "performance: mark test as a performance test")
     
-    Returns:
-        MatchEvent: A sample match event
-    """
-    return MatchEvent(
-        id="123",
-        type="goal",
-        timestamp=1625097600.0,
-        team_id="team1",
-        player_id="player1",
-        position={"x": 10.5, "y": 20.3},
-        additional_data={"speed": 25.6, "angle": 45.0},
+    # Set environment variables for testing
+    os.environ["APP_ENVIRONMENT"] = "test"
+
+
+def pytest_collection_modifyitems(config, items):
+    """Modify collected test items."""
+    # Skip integration tests unless explicitly requested
+    if not config.getoption("--integration"):
+        skip_integration = pytest.mark.skip(reason="need --integration option to run")
+        for item in items:
+            if "integration" in item.keywords:
+                item.add_marker(skip_integration)
+    
+    # Skip performance tests unless explicitly requested
+    if not config.getoption("--performance"):
+        skip_performance = pytest.mark.skip(reason="need --performance option to run")
+        for item in items:
+            if "performance" in item.keywords:
+                item.add_marker(skip_performance)
+
+
+def pytest_addoption(parser):
+    """Add command line options to pytest."""
+    parser.addoption(
+        "--integration",
+        action="store_true",
+        default=False,
+        help="run integration tests",
     )
-
-
-@pytest.fixture
-def sample_crowd_emotion() -> CrowdEmotion:
-    """Create a sample crowd emotion.
-    
-    Returns:
-        CrowdEmotion: A sample crowd emotion
-    """
-    return CrowdEmotion(
-        emotion="excitement",
-        intensity=85.5,
-        confidence=0.92,
-        timestamp=1625097600.0,
-        audio_features={
-            "rms_energy": 0.75,
-            "spectral_centroid": 3500.0,
-            "zero_crossing_rate": 0.15,
-            "tempo": 120.0,
-        },
-    )
-
-
-@pytest.fixture
-def sample_musical_parameters() -> MusicalParameters:
-    """Create a sample musical parameters.
-    
-    Returns:
-        MusicalParameters: Sample musical parameters
-    """
-    return MusicalParameters(
-        tempo=120.0,
-        key="C Major",
-        intensity=0.75,
-        instrumentation=["piano", "strings", "percussion"],
-        mood="excitement",
-        transition_duration=3.5,
+    parser.addoption(
+        "--performance",
+        action="store_true",
+        default=False,
+        help="run performance tests",
     )

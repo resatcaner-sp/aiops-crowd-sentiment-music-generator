@@ -1,0 +1,1 @@
+"""Test package for crowd sentiment music generator."""

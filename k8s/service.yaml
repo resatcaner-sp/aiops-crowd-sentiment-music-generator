@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: crowd-sentiment-music-generator
+  namespace: crowd-sentiment-music-generator
+  labels:
+    app: crowd-sentiment-music-generator
+spec:
+  selector:
+    app: crowd-sentiment-music-generator
+  ports:
+  - port: 80
+    targetPort: 8000
+    protocol: TCP
+  type: ClusterIP

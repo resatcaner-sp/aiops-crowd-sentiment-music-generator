@@ -1,0 +1,1 @@
+"""Unit tests for crowd sentiment music generator."""

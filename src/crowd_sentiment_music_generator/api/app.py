@@ -6,8 +6,19 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from crowd_sentiment_music_generator.api.routers import health, music, events
+from crowd_sentiment_music_generator.api.routers import (
+    audio_analysis,
+    events,
+    health,
+    highlights,
+    music,
+    override,
+    preferences,
+    scaling,
+)
 from crowd_sentiment_music_generator.models.data.system_config import SystemConfig
+from crowd_sentiment_music_generator.utils.auto_scaling import SystemResourceMonitor
+from crowd_sentiment_music_generator.utils.cache_init import lifespan_cache_setup
 
 logger = logging.getLogger(__name__)
 
@@ -24,15 +35,29 @@ async def lifespan(app: FastAPI):
     config = SystemConfig()
     app.state.config = config
     
-    # Initialize services
-    # TODO: Initialize services here
+    # Initialize system resource monitor
+    logger.info("Starting system resource monitor")
+    monitor = SystemResourceMonitor()
+    monitor.start()
+    app.state.resource_monitor = monitor
     
-    yield
-    
-    # Shutdown
-    logger.info("Shutting down the application")
-    # Clean up resources
-    # TODO: Clean up resources here
+    # Initialize cache
+    async with lifespan_cache_setup(app):
+        # Initialize other services
+        # TODO: Initialize additional services here
+        
+        yield
+        
+        # Shutdown
+        logger.info("Shutting down the application")
+        
+        # Stop resource monitor
+        if hasattr(app.state, "resource_monitor"):
+            logger.info("Stopping system resource monitor")
+            app.state.resource_monitor.stop()
+        
+        # Clean up resources
+        # TODO: Clean up additional resources here
 
 
 def create_app() -> FastAPI:
@@ -61,5 +86,10 @@ def create_app() -> FastAPI:
     app.include_router(health.router)
     app.include_router(music.router)
     app.include_router(events.router)
+    app.include_router(scaling.router)
+    app.include_router(audio_analysis.router)
+    app.include_router(highlights.router)
+    app.include_router(preferences.router)
+    app.include_router(override.router)
     
     return app

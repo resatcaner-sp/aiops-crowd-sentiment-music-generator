@@ -6,6 +6,7 @@ from typing import Any, Callable, TypeVar
 
 from crowd_sentiment_music_generator.exceptions.data_api_error import DataAPIError
 from crowd_sentiment_music_generator.exceptions.audio_processing_error import AudioProcessingError
+from crowd_sentiment_music_generator.exceptions.export_error import ExportError
 from crowd_sentiment_music_generator.exceptions.music_generation_error import MusicGenerationError
 from crowd_sentiment_music_generator.exceptions.synchronization_error import SynchronizationError
 
@@ -50,6 +51,9 @@ def with_error_handling(func: Callable[..., T]) -> Callable[..., T]:
             raise
         except AudioProcessingError as e:
             logger.error(f"Audio processing error in {func.__name__}: {str(e)}")
+            raise
+        except ExportError as e:
+            logger.error(f"Export error in {func.__name__}: {e.message}")
             raise
         except MusicGenerationError as e:
             logger.error(f"Music generation error in {func.__name__}: {str(e)}")
